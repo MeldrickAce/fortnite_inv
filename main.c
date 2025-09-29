@@ -18,6 +18,7 @@ void inserirItem(struct Item** inicio);
 void removerItem(struct Item** inicio);
 void listarItens(struct Item* inicio);
 int contarItens(struct Item* inicio);
+void buscarItem(struct Item* inicio);
 void liberarmemoria(struct Item* inicio);
 void limparBufferEntrada();
 
@@ -46,6 +47,10 @@ int main() {
 			listarItens(inicio);
 			break;
 		
+		case 4:
+			buscarItem(inicio);
+			break;
+		
 		case 0: // Sair
 			printf("Encerrando o jogo...\n");
 			break;
@@ -54,7 +59,7 @@ int main() {
 			break;
 		}
 
-		if (opcao != 0 && opcao != 3) {
+		if (opcao != 0 && opcao != 3 && opcao != 4) {
 			listarItens(inicio);
 		}
 
@@ -81,6 +86,7 @@ void exibirMenu(struct Item* inicio) {
 	printf("1. Adicionar Item (Loot)\n");
 	printf("2. Remover Item\n");
 	printf("3. Listar Itens na Mochila\n");
+	printf("4. Buscar Item por Nome\n");
 	printf("0. Sair\n");
 	printf("---------------------------------------------\n");
 	printf("Escolha uma opcao: ");
@@ -101,7 +107,7 @@ void inserirItem(struct Item** inicio) {
 	printf("\n--- Adicionar Novo Item ---\n");
 	printf("Nome do item: ");
 	fgets(nome, TAM_NOME, stdin);
-	printf("Tipo do item (arma, municao, cura, etc): ");
+	printf("Tipo do item: ");
 	fgets(tipo, TAM_TIPO, stdin);
 	printf("Quantidade: ");
 	scanf("%d", &quantidade);
@@ -193,6 +199,36 @@ int contarItens(struct Item* inicio) {
 		atual = atual->proximo;
 	}
 	return contagem;
+}
+
+/// @brief Busca itens por nome
+/// @param inicio O começo da lista
+void buscarItem(struct Item* inicio) {
+	struct Item* atual = inicio;
+	char nomeAlvo[TAM_NOME];
+	int encontrado = 0;
+
+	//printf("Resultado: Item '' NAO foi encontrado na mochila.\n");
+
+	printf("Digite o nome do item a ser buscado: ");
+	fgets(nomeAlvo, TAM_NOME, stdin);
+	nomeAlvo[strcspn(nomeAlvo, "\n")] = '\0';
+
+	while (atual != NULL) {
+		if (strcmp(atual->nome, nomeAlvo) == 0) {
+			printf("\n--- Item Encontrado! ---\n");
+			printf("Nome: %s\n", atual->nome);
+			printf("Tipo: %s\n", atual->tipo);
+			printf("Quantidade: %d\n", atual->quantidade);
+			printf("-------------------------\n");
+			encontrado = 1;
+		}
+		atual = atual->proximo;
+	}
+
+	if (!encontrado) {
+		printf("\nResultado: Item '%s' NAO foi encontrado na mochila.\n", nomeAlvo);
+	}
 }
 
 /// @brief Libera a memoria alocada
